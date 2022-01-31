@@ -1,6 +1,7 @@
 const express = require('express'),
 	fs = require('fs'),
-	{ GenVideoID } = require('../utils'),
+	{ GenPasteID, checkIP } = require('../utils'),
+	{	secureUpload, IPWhitelist } = require('../config'),
 	router = express.Router();
 
 // Home page
@@ -10,8 +11,11 @@ router.get('/', (req, res) => {
 
 // Upload new file
 router.post('/upload', (req, res) => {
+	// Check if the /upload endpoint should be secured and if so check IP
+	if (secureUpload && !IPWhitelist.includes(checkIP(req))) return res.json({ error: 'IP whitelist enabled' });
+
 	// Generate ID for file
-	const ID = GenVideoID();
+	const ID = GenPasteID();
 
 	// Create file
 	fs.writeFile(`${process.cwd()}/src/files/${ID}.txt`, req.body.name, function(err) {

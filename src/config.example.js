@@ -1,4 +1,6 @@
 const config = {
-	port: 6666,
+	port: 3000,
+	secureUpload: true,
+	IPWhitelist: ['::1'],
 };
 module.exports = config;

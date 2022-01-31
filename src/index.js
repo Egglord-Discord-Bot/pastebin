@@ -5,6 +5,7 @@ const express = require('express'),
 	{ port } = require('./config'),
 	helmet = require('helmet'),
 	bodyParser = require('body-parser'),
+	{ logger } = require('./utils'),
 	compression = require('compression');
 
 const corsOpt = {
@@ -22,7 +23,11 @@ app.use(helmet())
 	.engine('html', require('ejs').renderFile)
 	.set('view engine', 'ejs')
 	.set('views', './src/views')
+	.use(function(req, res, next) {
+		if (req.originalUrl !== '/favicon.ico') logger.connection(req, res);
+		next();
+	})
 	.use(bodyParser.urlencoded({ extended: true }))
 	// Home page
 	.use('/', require('./routes'))
-	.listen(port, () => console.log(`Started on PORT: ${port}`));
+	.listen(port, () => logger.ready(`Started on PORT: ${port}`));
