@@ -29,5 +29,6 @@ app.use(helmet())
 	})
 	.use(bodyParser.urlencoded({ extended: true }))
 	// Home page
+	.get('/favicon.ico', (req, res) => res.sendFile(`${process.cwd()}/src/assets/favicon.ico`))
 	.use('/', require('./routes'))
 	.listen(port, () => logger.ready(`Started on PORT: ${port}`));
